@@ -72,6 +72,16 @@ def get_price():
                         else:
                             properties += " {}%".format(
                                 crypto_data[crypto][property])
+                    elif property == "price_change_percentage_24h":
+                        if "price_change_percentage_24h_precision" in crypto_list[
+                                crypto]:
+                            properties += " {:.{}f}%".format(
+                                crypto_data[crypto][property],
+                                crypto_list[crypto]
+                                ["price_change_percentage_24h_precision"])
+                        else:
+                            properties += " {}%".format(
+                                crypto_data[crypto][property])
 
                     # other properties
                     else:
