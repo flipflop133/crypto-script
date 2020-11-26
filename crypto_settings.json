@@ -1,0 +1,22 @@
+{
+    "url": "https://api.coingecko.com/api/v3/coins/markets?",
+    "currency": "eur",
+    "crypto-list":[
+        {
+            "id": "bitcoin",
+            "symbol": true,
+            "current_price": true,
+            "price_precision": 0
+        },
+        {
+            "id": "ripple",
+            "symbol": true,
+            "current_price": true,
+            "price_precision": 3,
+            "balance": 10,
+            "balance_precision": 0,
+            "price_change_24h": true,
+            "price_change_24h_precision": 2
+        }
+    ]
+}
