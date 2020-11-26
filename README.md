@@ -27,6 +27,7 @@ The script simply displays informations about the selected crypto.
  - `price_change_24h`: bool
  - `price_change_24h_precision`: int (digits after decimal)
  - `price_change_percentage_24h`: bool
+ - `price_change_percentage_24h_precision`: int (digits after decimal)
  - `market_cap_change_24h`: bool
  - `market_cap_change_percentage_24h`: bool
  - `circulating_supply`: bool
@@ -60,8 +61,8 @@ The script simply displays informations about the selected crypto.
             "price_precision": 3,
             "balance": 10,
             "balance_precision": 0,
-            "price_change_24h": true,
-            "price_change_24h_precision": 2
+            "price_change_percentage_24h": true,
+            "price_change_percentage_24h_precision": 2
         }
     ]
 }
