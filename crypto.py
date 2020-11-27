@@ -2,7 +2,7 @@ import os
 import json
 import requests
 import time
-
+from colorama import Fore
 error_time = 0
 
 
@@ -17,6 +17,9 @@ def get_price():
         url = data['url']
         currency = data['currency']
         crypto_list = data['crypto-list']
+        polybar = False
+        if 'polybar' in data:
+            polybar = data['polybar']
 
         # retrieve crypto ids from json data
         ids = ""
@@ -36,6 +39,9 @@ def get_price():
 
         # display crypto properties
         for crypto in range(len(crypto_data)):
+            spaces = ''
+            if crypto != len(crypto_data) - 1:
+                spaces = ' ' * 4
             properties = ""
             for property in crypto_list[crypto]:
                 if property in crypto_data[crypto] and property != "id":
@@ -73,22 +79,36 @@ def get_price():
                             properties += " {}%".format(
                                 crypto_data[crypto][property])
                     elif property == "price_change_percentage_24h":
+                        # determine up or down icon
+                        if polybar:
+                            green = "%{F#00AA00}"
+                            red = "%{F#ff0000}"
+                            black = "%{F#000000}"
+                        else:
+                            green = Fore.GREEN
+                            red = Fore.RED
+                            black = Fore.RESET
+                        if crypto_data[crypto][property] > 0:
+                            icon = "{}".format(green)
+                        else:
+                            icon = "{}".format(red)
                         if "price_change_percentage_24h_precision" in crypto_list[
                                 crypto]:
-                            properties += " {:.{}f}%".format(
-                                crypto_data[crypto][property],
+                            properties += " {} {:.{}f}%{}".format(
+                                icon, crypto_data[crypto][property],
                                 crypto_list[crypto]
-                                ["price_change_percentage_24h_precision"])
+                                ["price_change_percentage_24h_precision"],
+                                black)
                         else:
-                            properties += " {}%".format(
-                                crypto_data[crypto][property])
+                            properties += " {}%{}".format(
+                                crypto_data[crypto][property], black)
 
                     # other properties
                     else:
                         properties += " {}".format(
                             crypto_data[crypto][property])
-            print(properties, end=' ' * 4)
-        print("")
+            properties += spaces
+            print(properties, end="")
 
     except OSError:
         print("crypto_settings.json file not found")

@@ -12,6 +12,7 @@ The script simply displays informations about the selected crypto.
 - ### Required
  - `currency`: string ("eur", "usd",...)
 - ### Optional
+ - `polybar`: bool (set to true for 100% compatibility with polybar)
  - `balance`: int (amount of coins you have)
  - `balance_precision`: int (digits after decimal)
  - `name`: bool (true or false)
@@ -45,6 +46,7 @@ The script simply displays informations about the selected crypto.
 ### Example
 ``` json
 {
+    "polybar": true,
     "url": "https://api.coingecko.com/api/v3/coins/markets?",
     "currency": "eur",
     "crypto-list":[
@@ -68,6 +70,7 @@ The script simply displays informations about the selected crypto.
 }
 ```
 ### Use with Polybar
+Set polybar value to true in crypto_settings.json and add the following config in polybar config:
 ``` ini
 [module/crypto]
 type = custom/script

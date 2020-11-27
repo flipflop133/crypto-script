@@ -1,4 +1,5 @@
 {
+    "polybar": true,
     "url": "https://api.coingecko.com/api/v3/coins/markets?",
     "currency": "eur",
     "crypto-list":[
