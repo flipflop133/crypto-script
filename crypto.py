@@ -2,14 +2,15 @@ import os
 import json
 import requests
 import time
+import sys
 from colorama import Fore
 error_time = 0
 
 
 def main():
+    # retrieve data from json file
+    data = get_data()
     try:
-        # retrieve data from json file
-        data = get_data()
         url = data['url']
         url_2 = data['url_2']
         currency = data['currency']
@@ -17,38 +18,46 @@ def main():
         polybar = False
         if 'polybar' in data:
             polybar = data['polybar']
+    except KeyError:
+        print("error in crypto_settings.json file")
+        sys.exit()
 
-        # retrieve crypto ids from json data
-        ids = get_crypto_ids(crypto_list)
+    # retrieve crypto ids from json data
+    ids = get_crypto_ids(crypto_list)
 
-        # retrieve crypto data from coingecko
+    # retrieve crypto data from coingecko
+    try:
         request = "{}vs_currency={}&ids={}{}".format(url, currency, ids, url_2)
         response = requests.get(request)
         crypto_data = json.loads(response.content)
-
-        # display crypto
-        display_crypto(currency, crypto_list, polybar, crypto_data)
-
-    # errors handling
-    except OSError:
-        print("crypto_settings.json file not found")
-    except json.JSONDecodeError:
-        print("error in crypto_settings.json file")
-    except Exception as e:
-        print(e)
+    except requests.ConnectionError:
+        print("no internet")
         global error_time
         time.sleep(error_time)
         error_time += 10
         print(error_time)
         main()
+    except requests.exceptions.InvalidSchema:
+        print("request url incorrect, check crypto_settings.json file")
+        sys.exit()
+
+    # display crypto
+    display_crypto(currency, crypto_list, polybar, crypto_data)
 
 
 def get_data():
-    with open(
-            "{}/crypto_settings.json".format(
-                os.path.dirname(os.path.realpath(__file__))),
-            "r") as read_file:
-        return json.load(read_file)
+    try:
+        with open(
+                "{}/crypto_settings.json".format(
+                    os.path.dirname(os.path.realpath(__file__))),
+                "r") as read_file:
+            return json.load(read_file)
+    except OSError:
+        print("crypto_settings.json file not found")
+        sys.exit()
+    except json.JSONDecodeError:
+        print("error in crypto_settings.json file")
+        sys.exit()
 
 
 def get_crypto_ids(crypto_list):
@@ -174,4 +183,9 @@ def price_change_percentage_24h(crypto_list, polybar, crypto_data, crypto,
     return properties
 
 
-main()
+try:
+    main()
+except Exception as err:
+    exception_type = type(err).__name__
+    print(exception_type)
+    sys.exit()
